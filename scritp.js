@@ -20,7 +20,7 @@ const t1=gsap.timeline(
          end:"bottom top",
          scrub:true,
          pin:true,
-         ease:"power2.inOut"
+         ease:"power2.inOut",
       }
    }
 );
