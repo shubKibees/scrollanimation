@@ -1,0 +1,107 @@
+%%[
+var @name, @email, @Phnumber, @optin, @utm_source,
+    @utm_medium, @utm_campaign, @utm_Id, @utm_term, @utm_content, @state, @city,
+    @orgName, @product, @industry, @product_interested, @scheduledEmail, @time
+SET @name = RequestParameter("name")
+SET @email = RequestParameter("email")
+SET @Phnumber = RequestParameter("phone")
+SET @utm_campaign = RequestParameter("utm_campaign")
+SET @utm_medium = RequestParameter("utm_medium")
+SET @utm_source = RequestParameter("utm_source")
+SET @utm_content = RequestParameter("utm_content")
+SET @utm_term = RequestParameter("utm_term")
+SET @utm_Id = RequestParameter("utm_id")
+SET @submited_date = Format(Now(), "dd/MM/yyyy")
+SET @optin = "True"
+SET @scheduledEmail = "priyadarshani.das@ienergizer.com"
+SET @time = Format(Now(), "HH:mm:ss")
+ 
+IF NOT EMPTY(@email) THEN
+]%%
+<script runat="server">
+        Platform.Load("Core", "1.1.1");
+        var emailAddress = Variable.GetValue("@email");
+        var Name = Variable.GetValue("@name");
+        var Phnumber = Variable.GetValue("@Phnumber");
+        var phcode = "91";
+        var phNumbercode = phcode.concat(" ", Phnumber);
+        var sendableEmail = Variable.GetValue("@sendableEmail");
+        var optIN = Variable.GetValue("@optin");
+        var utmsource = Variable.GetValue("@utm_source");
+        var utmmedium = Variable.GetValue("@utm_medium");
+        var utmcampaign = Variable.GetValue("@utm_campaign");
+        var utmId = Variable.GetValue("@utm_Id");
+        var utmterm = Variable.GetValue("@utm_term");
+        var utmcontent = Variable.GetValue("@utm_content");
+        var clientId = 'ofgxkhy7gcup6oh64o244may';
+        var clientSecret = 'smNeC1hPTu3rraJFVNDsMemi';
+        var authEndpoint = 'https://mcm2fqfvcmzrc85bckkjf7l35rg1.auth.marketingcloudapis.com';
+        var payload = {
+            client_id: clientId,
+            client_secret: clientSecret,
+            grant_type: 'client_credentials'
+        };
+        var url = authEndpoint + '/v2/token';
+        var contentType = 'application/json';
+        var accessTokenRequest = HTTP.Post(url, contentType, Stringify(payload));
+        if (accessTokenRequest.StatusCode == 200) {
+            var tokenResponse = Platform.Function.ParseJSON(accessTokenRequest.Response[0]);
+            var accessToken = tokenResponse.access_token;
+        }
+        var journeyURL = 'https://mcm2fqfvcmzrc85bckkjf7l35rg1.rest.marketingcloudapis.com' + '/interaction/v1/events';
+        var headerNames = ['Authorization'];
+        var head1 = 'Bearer ' + accessToken;
+        var Payload1 = {
+            "ContactKey": emailAddress,
+            "EventDefinitionKey": "APIEvent-744f417e-571d-1e29-c58b-d8d15dd8d722",
+            "Data": {
+                "Email": emailAddress,
+                "Name": Name,
+                "Mobile": phNumbercode,
+                "Scheduled_Email": sendableEmail,
+                "OptIn": optIN,
+                "utm_source": utmsource,
+                "utm_medium": utmmedium,
+                "utm_campaign": utmcampaign,
+                "utm_Id": utmId,
+                "utm_term": utmterm,
+                "utm_content": utmcontent
+            }
+        };
+        try {
+            var req1 = new Script.Util.HttpRequest(journeyURL);
+            req1.retries = 1;
+            req1.continueOnError = true;
+            req1.contentType = "application/json";
+            req1.method = "POST";
+            req1.setHeader("Authorization", head1);
+            req1.postData = Stringify(Payload1);
+            req1.setHeader("User-Agent", "PostmanRuntime/7.26.10");
+            var resp1 = req1.send();
+        } catch (e) {
+            Write("Exception: " + Stringify(e));
+        }
+</script>
+%%[
+ENDIF
+ 
+IF NOT EMPTY(RequestParameter('email')) THEN
+    UpsertData(
+        "tc-series-databace", 1,
+        "Email", @email,
+        "Name", @name,
+        "Mobile_No", @Phnumber,
+        "utm_source", @utm_source,
+        "utm_medium", @utm_medium,
+        "utm_campaign", @utm_campaign,
+        "utm_content", @utm_content,
+        "utm_term", @utm_term,
+        "utm_Id", @utm_Id,
+        "OptIn", @optin,
+        "Scheduled_Email", @scheduledEmail,
+        "time", @time,
+        "date", @submited_date
+    )
+    Redirect("https://cloud.connect.canon.co.in/tc-series-thank-you")
+ENDIF
+]%%
