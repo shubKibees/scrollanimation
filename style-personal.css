@@ -194,7 +194,7 @@ body{
    shape-outside: url(https://assets.codepen.io/197359/flower-purple.png);
 }
 
-@container (max-width: 400px) {
+@container (max-width: 600px) {
   .layer :where(h2,p){
     display: none;
   }

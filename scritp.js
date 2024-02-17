@@ -16,11 +16,12 @@ const t1=gsap.timeline(
    {
       scrollTrigger:{
          trigger:".section-container-list",
+         top:0,
          start:"top top",
-         end:"bottom top",
+         end:"1000px top",
          scrub:true,
          pin:true,
-         ease:"power2.inOut",
+         markers: {startColor: "white", endColor: "white", fontSize: "18px", fontWeight: "bold", indent: 20}
       }
    }
 );
@@ -38,8 +39,5 @@ function removeShowClass(){
 t1.to(".section-container-list .section-content", {
    className: "section-content show",
    stagger: 1,
-   // onComplete: function () {
-   //    gsap.to(".section-container-list", { opacity: "0", duration: 1, ease: "power2.inOut" });
-   // },
 });
 
