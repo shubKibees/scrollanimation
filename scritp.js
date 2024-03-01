@@ -12,19 +12,22 @@ function raf(time) {
 requestAnimationFrame(raf)
 
 
-const t1=gsap.timeline(
-   {
-      scrollTrigger:{
-         trigger:".section-container-list",
-         top:0,
-         start:"top top",
-         end:"1000px top",
-         scrub:true,
-         pin:true,
-         markers: {startColor: "white", endColor: "white", fontSize: "18px", fontWeight: "bold", indent: 20}
-      }
-   }
-);
+const t1 = gsap.timeline({
+   scrollTrigger: {
+      trigger: ".section-container-list",
+      top: 0,
+      start: "top top",
+      end: "1000px top",
+      scrub: true,
+      pin: true,
+      markers: { startColor: "white", endColor: "white", fontSize: "18px", fontWeight: "bold", indent: 20 },
+      onComplete: () => {
+         gsap.to(".section-container-list", { transform: "translate(0px, 385px)", duration: 0.5, ease: "power2.inOut" });
+      },
+}
+});
+
+
 
 
 function removeShowClass(){

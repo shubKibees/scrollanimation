@@ -104,7 +104,7 @@ body{
   height: 100vh;
   overflow: hidden;
   opacity: 1;
-  transition:800ms;
+  transition:grid-template-columns 300ms;
 }
 
 .section-container-list .section-content{
@@ -139,6 +139,7 @@ body{
 .section-content:not(.show){
   padding: 0px;
 }
+
 */
 
  .section-container-list .section-content:not(.show) img{
@@ -156,7 +157,6 @@ body{
     display: grid;
     grid-template-columns: 20% 70%;
 }
-
 
 .section-content h2{
    font-size: 75px;
@@ -195,6 +195,11 @@ body{
 }
 
 @container (max-width: 600px) {
+  .layer{
+    display: flex !important;
+    height: 100%;
+    align-items: center;
+  }
   .layer :where(h2,p){
     display: none;
   }
